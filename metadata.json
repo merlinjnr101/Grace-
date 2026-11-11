@@ -1,0 +1,6 @@
+{
+  "name": "SOG – Son of Grace Wears",
+  "description": "Wear Grace. Wear Confidence. Exclusive luxury streetwear and high fashion e-commerce with real-time admin portal and Telegram-connected operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
