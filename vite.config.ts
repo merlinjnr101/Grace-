@@ -3,19 +3,22 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig, type Plugin } from 'vite';
-import express from 'express';
-import apiRouter from './server/api.ts';
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
+// The API router (and its Telegram poller / file-backed store) is only loaded
+// when the dev server starts. Importing it at the top level starts a polling
+// loop that keeps `vite build` from ever exiting.
 function sogBackendPlugin(): Plugin {
-  const app = express();
-  app.use(express.json());
-  app.use('/api', apiRouter);
-
   return {
     name: 'sog-backend-plugin',
-    configureServer(server) {
+    apply: 'serve',
+    async configureServer(server) {
+      const { default: express } = await import('express');
+      const { default: apiRouter } = await import('./server/api.ts');
+      const app = express();
+      app.use(express.json());
+      app.use('/api', apiRouter);
       server.middlewares.use(app);
     },
   };
